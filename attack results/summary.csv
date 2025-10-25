@@ -1,0 +1,5 @@
+dataset,n_samples,asr,avg_queries,avg_similarity,elapsed_seconds,csv_path
+imdb,1000,0.455,323.553,0.872839729309082,13518.813490390778,./attack_results/attacks_imdb.csv
+ag_news,1000,0.147,86.841,0.7981941431164742,2534.038435935974,./attack_results/attacks_ag_news.csv
+yelp_polarity,1000,0.325,225.928,0.8420404251217842,8907.433420658112,./attack_results/attacks_yelp_polarity.csv
+rotten_tomatoes,1000,0.531,41.126,0.8109556267261505,830.3221998214722,./attack_results/attacks_rotten_tomatoes.csv
