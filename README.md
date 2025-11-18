@@ -11,20 +11,89 @@ Hard-label (decision-based) adversarial attacks on pretrained sentiment and topi
 
 ---
 
-## Summary (results)
+## Summary (Results)
 
-The experiment was run on 1,000 examples per dataset. Per-dataset CSVs were written to `./attack_results/attacks_<dataset>.csv`. The aggregated summary (and per-example CSVs) can be found in the `attack_results` folder.
+We present comprehensive results across three methodologies: **TextFooler** (gradient-based baseline), **Old Hard-Label Attack** (Project Update 1), and **Improved Hard-Label Attack** (current implementation). All experiments were conducted on 1,000 examples per dataset.
 
-| dataset | n_samples | asr | avg_queries | avg_similarity | elapsed_seconds | csv_path |
-|---|---:|---:|---:|---:|---:|---|
-| imdb | 1000 | 0.455 | 323.553 | 0.872839729309082 | 13518.813490390778 | `./attack_results/attacks_imdb.csv` |
-| ag_news | 1000 | 0.147 | 86.841 | 0.7981941431164742 | 2534.038435935974 | `./attack_results/attacks_ag_news.csv` |
-| yelp_polarity | 1000 | 0.325 | 225.928 | 0.8420404251217842 | 8907.433420658112 | `./attack_results/attacks_yelp_polarity.csv` |
-| rotten_tomatoes | 1000 | 0.531 | 41.126 | 0.8109556267261505 | 830.3221998214722 | `./attack_results/attacks_rotten_tomatoes.csv` |
+### Comparative Results Across All Methods
 
-> All per-example CSVs and the `summary.csv` were saved into `./attack_results/` during the run — these files can be found in the folder **"attack results"**.
+| Dataset | Method | ASR (%) | Avg Queries | Avg Similarity | Time (min) |
+|---------|--------|---------|-------------|----------------|------------|
+| **Rotten Tomatoes** | TextFooler | 50.5 | 69.6 | 0.834 | 11.3 |
+| | Old Hard-Label | 53.1 | 41.1 | 0.811 | 13.8 |
+| | **Improved Hard-Label** | **50.9** | **42.4** | **0.791** | **---** |
+| **IMDB** | TextFooler | 41.0 | 661.7 | 0.837 | 185.5 |
+| | Old Hard-Label | 45.5 | 323.6 | 0.873 | 225.3 |
+| | **Improved Hard-Label** | **42.2** | **312.8** | **0.888** | **---** |
+| **AG News** | TextFooler | 13.2 | 169.3 | 0.815 | 30.0 |
+| | Old Hard-Label | 14.7 | 86.8 | 0.798 | 42.2 |
+| | **Improved Hard-Label** | **14.7** | **83.6** | **0.796** | **---** |
+| **Yelp Polarity** | TextFooler | 24.5 | 524.6 | 0.819 | 134.1 |
+| | Old Hard-Label | 32.5 | 225.9 | 0.842 | 148.5 |
+| | **Improved Hard-Label** | **29.3** | **223.4** | **0.855** | **---** |
+| **Average** | TextFooler | 32.3 | 356.3 | 0.826 | 90.2 |
+| | Old Hard-Label | 36.5 | 169.4 | 0.831 | 107.5 |
+| | **Improved Hard-Label** | **34.3** | **165.6** | **0.833** | **---** |
+
+### Key Findings
+
+- **Query Efficiency**: Our improved hard-label method achieves **53.5% query reduction** (165.6 vs. 356.3 average queries) compared to TextFooler baseline
+- **Semantic Preservation**: Progressive improvement across methods: TextFooler (0.826) → Old Hard-Label (0.831) → Improved Hard-Label (0.833)
+- **Dataset-Specific Performance**:
+  - **Rotten Tomatoes**: Highest ASR across all methods (50.5-53.1%), minimal queries required (41-70)
+  - **IMDB**: Best semantic similarity with improved method (0.888), 52.7% query reduction vs. TextFooler
+  - **AG News**: Most challenging (13.2-14.7% ASR), but still 50% query reduction vs. TextFooler
+  - **Yelp Polarity**: 57.4% query reduction vs. TextFooler, excellent semantic preservation (0.855)
+
+### Improved Hard-Label Attack Details
+
+The current implementation incorporates several key enhancements:
+
+| Dataset | n_samples | ASR | Avg Queries | Avg Similarity | CSV Path |
+|---------|-----------|-----|-------------|----------------|----------|
+| rotten_tomatoes | 1000 | 0.509 | 42.360 | 0.790831 | `./attack_results/attacks_rotten_tomatoes.csv` |
+| imdb | 1000 | 0.422 | 312.807 | 0.888499 | `./attack_results/attacks_imdb.csv` |
+| ag_news | 1000 | 0.147 | 83.589 | 0.796450 | `./attack_results/attacks_ag_news.csv` |
+| yelp_polarity | 1000 | 0.293 | 223.414 | 0.854640 | `./attack_results/attacks_yelp_polarity.csv` |
+
+### TextFooler Baseline Results
+
+For comparison, we include TextFooler baseline results:
+
+| Dataset | n_samples | ASR | Avg Queries | Avg Similarity | Time (min) |
+|---------|-----------|-----|-------------|----------------|------------|
+| rotten_tomatoes | 1000 | 0.505 | 69.6 | 0.834 | 11.3 |
+| imdb | 1000 | 0.410 | 661.7 | 0.837 | 185.5 |
+| ag_news | 1000 | 0.132 | 169.3 | 0.815 | 30.0 |
+| yelp_polarity | 1000 | 0.245 | 524.6 | 0.819 | 134.1 |
+
+### Method Evolution: Update 1 → Improved
+
+**Improvements in Current Version:**
+- ✅ MLM-guided candidate generation (replacing WordNet synonyms)
+- ✅ Query-budget-aware importance scoring (60% allocation cap)
+- ✅ Adaptive constraint relaxation (POS loosening, threshold reduction)
+- ✅ Conservative adoption strategy for boundary-approaching
+- ✅ Superior semantic preservation (0.833 vs. 0.831 average similarity)
+- ✅ Better query efficiency (165.6 vs. 169.4 average queries)
+
+**Trade-offs:**
+- Slightly lower ASR (34.3% vs. 36.5%) reflecting conservative perturbation strategy
+- Prioritizes semantic coherence and imperceptibility over raw attack success
+
+> **Note**: All per-example CSVs and summary files are saved in `./attack_results/` and `./textfooler_results/` directories.
 
 ---
+
+## Experimental Configuration
+
+- **Query Budget**: 1,000 queries per example
+- **Semantic Similarity Threshold**: τ = 0.5
+- **MLM Candidates**: k = 8 top predictions
+- **Importance Scoring Budget**: 60% of total queries
+- **Models**: Fine-tuned DistilBERT classifiers (TextAttack hub)
+- **Semantic Similarity**: Sentence-BERT (all-MiniLM-L6-v2)
+- **Random Seed**: 42 (for reproducibility)
 
 ## Key features
 
