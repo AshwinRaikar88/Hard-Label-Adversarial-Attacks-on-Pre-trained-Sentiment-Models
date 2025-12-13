@@ -1,39 +1,35 @@
 # Hard Label Adversarial Attacks on Pre-trained Sentiment Models
 Hard-label (decision-based) adversarial attacks on pretrained sentiment and topic models using MLM-generated substitutions constrained by SBERT semantic similarity.
 
----
-
 ## Contents
 
 - `attack_pipeline.py` — main script implementing the hard-label TextFooler-style attack  
 - `requirements.txt` — Python dependencies   
 - `attack_results/` — folder containing per-example CSVs and `summary.csv` with aggregated metrics (these results can be found in this folder **"attack results"**)
 
----
-
 ## Summary (Results)
 
 We present comprehensive results across three methodologies: **TextFooler** (gradient-based baseline), **Old Hard-Label Attack** (Project Update 1), and **Improved Hard-Label Attack** (current implementation). All experiments were conducted on 1,000 examples per dataset.
 
 ### Comparative Results Across All Methods
+| Dataset | Method | ASR (%) | Avg Queries | Avg Similarity | Perturbation Rate |
+|---------|--------|---------|-------------|----------------|-------------------|
+| **Rotten Tomatoes** | TextFooler | 50.5 | 69.6 | 0.834 | 8.87 |
+| | Old Hard-Label | 53.1 | 41.1 | 0.811 | 10.93 |
+| | **Improved Hard-Label** | **50.9** | **42.4** | **0.791** | **11.42** |
+| **IMDB** | TextFooler | 41.0 | 661.7 | 0.837 | 42.75 |
+| | Old Hard-Label | 45.5 | 323.6 | 0.873 | 112.87 |
+| | **Improved Hard-Label** | **42.2** | **312.8** | **0.888** | **112.5** |
+| **AG News** | TextFooler | 13.2 | 169.3 | 0.815 | 10.94 |
+| | Old Hard-Label | 14.7 | 86.8 | 0.798 | 16.82 |
+| | **Improved Hard-Label** | **14.7** | **83.6** | **0.796** | **17.13** |
+| **Yelp Polarity** | TextFooler | 24.5 | 524.6 | 0.819 | 28.81 |
+| | Old Hard-Label | 32.5 | 225.9 | 0.842 | 75.13 |
+| | **Improved Hard-Label** | **29.3** | **223.4** | **0.855** | **79.11** |
+| **Average** | TextFooler | 32.3 | 356.3 | 0.826 | 22.84 |
+| | Old Hard-Label | 36.5 | 169.4 | 0.831 | 53.94 |
+| | **Improved Hard-Label** | **34.3** | **165.6** | **0.833** | **55.04** |
 
-| Dataset | Method | ASR (%) | Avg Queries | Avg Similarity | Time (min) |
-|---------|--------|---------|-------------|----------------|------------|
-| **Rotten Tomatoes** | TextFooler | 50.5 | 69.6 | 0.834 | 11.3 |
-| | Old Hard-Label | 53.1 | 41.1 | 0.811 | 13.8 |
-| | **Improved Hard-Label** | **50.9** | **42.4** | **0.791** | **---** |
-| **IMDB** | TextFooler | 41.0 | 661.7 | 0.837 | 185.5 |
-| | Old Hard-Label | 45.5 | 323.6 | 0.873 | 225.3 |
-| | **Improved Hard-Label** | **42.2** | **312.8** | **0.888** | **---** |
-| **AG News** | TextFooler | 13.2 | 169.3 | 0.815 | 30.0 |
-| | Old Hard-Label | 14.7 | 86.8 | 0.798 | 42.2 |
-| | **Improved Hard-Label** | **14.7** | **83.6** | **0.796** | **---** |
-| **Yelp Polarity** | TextFooler | 24.5 | 524.6 | 0.819 | 134.1 |
-| | Old Hard-Label | 32.5 | 225.9 | 0.842 | 148.5 |
-| | **Improved Hard-Label** | **29.3** | **223.4** | **0.855** | **---** |
-| **Average** | TextFooler | 32.3 | 356.3 | 0.826 | 90.2 |
-| | Old Hard-Label | 36.5 | 169.4 | 0.831 | 107.5 |
-| | **Improved Hard-Label** | **34.3** | **165.6** | **0.833** | **---** |
 
 ### Key Findings
 
